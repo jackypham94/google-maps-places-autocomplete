@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Maps Places Autocomplete</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+</head>
+<body>
+
+<form method="post" action="">
+  <input type="text" name="address" id="address"><br><br>
+
+  <input type="text" name="street_number" id="street_number"><br>
+  <input type="text" name="route" id="route"><br>
+  <input type="text" name="administrative_area_level_1" id="administrative_area_level_1"><br>
+  <input type="text" name="administrative_area_level_2" id="administrative_area_level_2"><br>
+  <input type="text" name="postal_code" id="postal_code"><br>
+  <input type="text" name="locality" id="locality"><br>
+  <input type="text" name="country" id="country"><br>
+  <input type="text" name="lat" id="lat"><br>
+  <input type="text" name="lng" id="lng">
+</form>
+
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+
+  <script type="text/javascript">
+    var placeSearch, autocomplete;
+    var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        administrative_area_level_2: 'short_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+    };
+
+    function initialize() {
+        autocomplete = new google.maps.places.Autocomplete(
+                (document.getElementById('address')),
+                { types: [ 'geocode' ],
+                    componentRestrictions: {
+                        country: 'fr'
+                    }
+                });
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            fillInAddress();
+        });
+    }
+
+    function fillInAddress() {
+        var place = autocomplete.getPlace();
+
+        for (var component in componentForm) {
+            document.getElementById(component).value = '';
+            document.getElementById(component).disabled = false;
+        }
+
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (componentForm[addressType]) {
+                var val = place.address_components[i][componentForm[addressType]];
+                document.getElementById(addressType).value = val;
+            }
+        }
+
+        var latitude = place.geometry.location.lat();
+        var longitude = place.geometry.location.lng();
+        document.getElementById('lat').value = latitude;
+        document.getElementById('lng').value = longitude;
+
+    }
+
+    initialize();
+  </script>
+</body>
+</html>
