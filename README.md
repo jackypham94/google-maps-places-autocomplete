@@ -8,3 +8,7 @@ File | Description
 -----|:-------------
 new.html | New version
 old.html | Old version
+
+## Usage
+
+Remplace ``YOUR_API_KEY`` in new.html by your API key : https://developers.google.com/maps/documentation/javascript/get-api-key
